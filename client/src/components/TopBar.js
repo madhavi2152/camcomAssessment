@@ -80,6 +80,10 @@ export default function TopBar({ onToggleSidebar, onResetView, onDownload }) {
         return;
       }
 
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
+      }
       dispatch(setImage(data.imageUrl));
       dispatch(setUploadStatus("uploaded"));
       if (inputRef.current) inputRef.current.value = "";
@@ -92,7 +96,17 @@ export default function TopBar({ onToggleSidebar, onResetView, onDownload }) {
   }
 
   function openFilePicker() {
-    if (inputRef.current) inputRef.current.click();
+    if (!inputRef.current) return;
+    inputRef.current.value = "";
+    inputRef.current.click();
+  }
+
+  function onUploadOrReuploadClick() {
+    if (imageUrl) {
+      const ok = window.confirm("Discard the current image and its annotations?");
+      if (!ok) return;
+    }
+    openFilePicker();
   }
 
   return (
@@ -107,8 +121,8 @@ export default function TopBar({ onToggleSidebar, onResetView, onDownload }) {
           ☰
         </button>
 
-        <button type="button" className="btnPrimarySolid" onClick={openFilePicker}>
-          Upload
+        <button type="button" className="btnPrimarySolid" onClick={onUploadOrReuploadClick}>
+          {imageUrl ? "Reupload" : "Upload"}
         </button>
         <input
           ref={inputRef}

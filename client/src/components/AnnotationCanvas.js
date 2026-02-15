@@ -114,6 +114,7 @@ function AnnotationCanvasImpl(props, ref) {
       setImgLoaded(false);
       return;
     }
+    setImgLoaded(false);
     const img = new Image();
     img.onload = () => {
       imgRef.current = img;

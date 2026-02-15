@@ -49,6 +49,7 @@ const upload = multer({
 });
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(cors({ origin: true }));
 app.use(morgan("dev"));
 
@@ -77,7 +78,8 @@ app.post("/upload", (req, res) => {
       return res.status(400).json({ ok: false, error: "No file received." });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
     return res.status(201).json({ ok: true, imageUrl });
   });
 });

@@ -6,6 +6,7 @@ import { classToColors } from "../utils/colors";
 import { setCurrentClass } from "../store/actions";
 
 const CLASS_OPTIONS = ["Class 1", "Class 2", "Class 3"];
+const API_BASE = process.env.REACT_APP_API_BASE || "";
 
 function ClassChip({ label, active, disabled, onClick }) {
   const colors = classToColors(label);
@@ -57,7 +58,7 @@ export default function TopBar({ onToggleSidebar, onResetView, onDownload }) {
       const form = new FormData();
       form.append("image", file);
 
-      const res = await fetch("/upload", { method: "POST", body: form });
+      const res = await fetch(`${API_BASE}/upload`, { method: "POST", body: form });
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {

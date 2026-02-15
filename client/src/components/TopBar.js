@@ -31,6 +31,7 @@ export default function TopBar({ onToggleSidebar, onResetView, onDownload }) {
   const dispatch = useDispatch();
   const inputRef = useRef(null);
   const [localError, setLocalError] = useState(null);
+  const objectUrlRef = useRef(null);
 
   const imageUrl = useSelector((s) => s.image.imageUrl);
   const polygons = useSelector((s) => s.annotation.polygons);
@@ -55,6 +56,16 @@ export default function TopBar({ onToggleSidebar, onResetView, onDownload }) {
     dispatch(resetAnnotations());
 
     try {
+      if (!API_BASE) {
+        if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+        const url = URL.createObjectURL(file);
+        objectUrlRef.current = url;
+        dispatch(setImage(url));
+        dispatch(setUploadStatus("uploaded"));
+        if (inputRef.current) inputRef.current.value = "";
+        return;
+      }
+
       const form = new FormData();
       form.append("image", file);
 

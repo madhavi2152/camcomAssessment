@@ -8,6 +8,7 @@ const fs = require("fs");
 const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 const MAX_BYTES = 10 * 1024 * 1024;
+const CLIENT_BUILD_DIR = path.join(__dirname, "..", "client", "build");
 
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -83,6 +84,13 @@ app.post("/upload", (req, res) => {
     return res.status(201).json({ ok: true, imageUrl });
   });
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(CLIENT_BUILD_DIR));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(CLIENT_BUILD_DIR, "index.html"));
+  });
+}
 
 app.use((err, req, res, next) => {
   void req;

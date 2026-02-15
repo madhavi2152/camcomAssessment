@@ -28,6 +28,19 @@ npm run install:all
 npm run dev
 ```
 
+## Single deployed app (one URL)
+For Vercel as a single deploy, the app uses **local file upload** (no backend needed) and still enforces **JPEG + 10MB**.
+If you want the Node upload API, deploy the server separately and set `REACT_APP_API_BASE`.
+
+### Production build locally
+
+```bash
+npm run build
+npm run start:prod
+```
+
+Then open `http://localhost:5000`
+
 ## Notes
 - Client runs on `http://localhost:3000`
 - Server runs on `http://localhost:5000`
